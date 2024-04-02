@@ -10,6 +10,7 @@ except:
     print("No APEX!")
 import numpy as np
 import torch
+import torch.distributed as dist
 import yaml
 from det3d import torchie
 from det3d.datasets import build_dataloader, build_dataset
@@ -91,9 +92,15 @@ def main():
         distributed = int(os.environ["WORLD_SIZE"]) > 1
 
     if distributed:
-        torch.cuda.set_device(args.local_rank)
-        torch.distributed.init_process_group(backend="nccl", init_method="env://")
-
+        if torch.cuda.is_available():
+            dist.init_process_group(dist.Backend.NCCL)
+            # Initialize a group with Gloo backend for CPU ops
+            dist.new_group(backend=dist.Backend.GLOO)
+        else:
+            dist.init_process_group(backend=dist.Backend.GLOO)
+        rank = torch.distributed.get_rank()
+        torch.cuda.set_device(rank)
+        cfg.local_rank = rank
         cfg.gpus = torch.distributed.get_world_size()
     else:
         cfg.gpus = args.gpus
@@ -124,7 +131,8 @@ def main():
 
     # put model on gpus
     if distributed:
-        model = apex.parallel.convert_syncbn_model(model)
+        # model = apex.parallel.convert_syncbn_model(model)
+        model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
         model = DistributedDataParallel(
             model.cuda(cfg.local_rank),
             device_ids=[cfg.local_rank],
@@ -177,7 +185,7 @@ def main():
             detections.update(
                 {token: output,}
             )
-            if args.local_rank == 0:
+            if cfg.local_rank == 0:
                 prog_bar.update()
 
     synchronize()
