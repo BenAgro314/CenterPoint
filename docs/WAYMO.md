@@ -86,13 +86,13 @@ In the end, the data and info files should be organized as follows
 Use the following command to start a distributed training using 4 GPUs. The models and logs will be saved to ```work_dirs/CONFIG_NAME```. 
 
 ```bash
-python -m torch.distributed.launch --nproc_per_node=4 ./tools/train.py CONFIG_PATH
+torchrun --nproc_per_node=4 ./tools/train.py CONFIG_PATH
 ```
 
 For distributed testing with 4 gpus,
 
 ```bash
-python -m torch.distributed.launch --nproc_per_node=4 ./tools/dist_test.py CONFIG_PATH --work_dir work_dirs/CONFIG_NAME --checkpoint work_dirs/CONFIG_NAME/latest.pth 
+torchrun --nproc_per_node=4 ./tools/dist_test.py CONFIG_PATH --work_dir work_dirs/CONFIG_NAME --checkpoint work_dirs/CONFIG_NAME/latest.pth 
 ```
 
 For testing with one gpu and see the inference time,
