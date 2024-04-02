@@ -45,7 +45,7 @@ def main(args):
 
     print("Number of files {}".format(len(fnames)))
 
-    with Pool(128) as p: # change according to your cpu
+    with Pool(48) as p: # change according to your cpu
         r = list(tqdm.tqdm(p.imap(convert, range(len(fnames))), total=len(fnames)))
 
 
