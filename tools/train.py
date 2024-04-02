@@ -83,9 +83,16 @@ def main():
 
     if distributed:
         if args.launcher == "pytorch":
-            torch.cuda.set_device(args.local_rank)
-            torch.distributed.init_process_group(backend="nccl", init_method="env://")
-            cfg.local_rank = args.local_rank
+            if torch.cuda.is_available():
+                dist.init_process_group(dist.Backend.NCCL)
+                # Initialize a group with Gloo backend for CPU ops
+                dist.new_group(backend=dist.Backend.GLOO)
+            else:
+                dist.init_process_group(backend=dist.Backend.GLOO)
+            rank = torch.distributed.get_rank()
+            torch.cuda.set_device(rank)
+            cfg.local_rank = rank
+            # torch.distributed.init_process_group(backend="nccl", init_method="env://")
         elif args.launcher == "slurm":
             proc_id = int(os.environ["SLURM_PROCID"])
             ntasks = int(os.environ["SLURM_NTASKS"])
