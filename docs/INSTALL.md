@@ -76,8 +76,8 @@ git checkout 5633f6  # recent commit doesn't build in our system
 pip install -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./
 ```
 
-#### spconv
-```bash
+#### spconv DONT DO THIS, USE PIP
+```bash 
 sudo apt-get install libboost-all-dev
 git clone https://github.com/traveller59/spconv.git --recursive
 cd spconv && git checkout 7342772
