@@ -6,7 +6,7 @@ Modified from [det3d](https://github.com/poodarchu/Det3D/tree/56402d4761a5b73acd
 - Linux
 - Python 3.6+
 - PyTorch 1.1 or higher
-- CUDA 10.0 or higher
+- CUDA 12.1 or higher
 - CMake 3.13.2 or higher
 - [APEX](https://github.com/nvidia/apex)
 - [spconv](https://github.com/traveller59/spconv/commit/73427720a539caf9a44ec58abe3af7aa9ddb8e39) 
@@ -19,10 +19,9 @@ Modified from [det3d](https://github.com/poodarchu/Det3D/tree/56402d4761a5b73acd
 we have tested the following versions of OS and softwares:
 
 - OS: Ubuntu 16.04/18.04
-- Python: 3.6.5/3.7.10 
-- PyTorch: 1.1/1.9/1.10.1
+- Python: 3.6.5/3.7.12.1- PyTorch: 1.1/1.9/1.12.1
 - spconv: 1.0/1.2.1/master
-- CUDA: 10.0/11.1
+- CUDA: 12.1/11.1
 
 ### Basic Installation 
 
@@ -30,7 +29,7 @@ we have tested the following versions of OS and softwares:
 # basic python libraries
 conda create --name centerpoint python=3.6
 conda activate centerpoint
-conda install pytorch==1.1.0 torchvision==0.3.0 cudatoolkit=10.0 -c pytorch
+conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
 git clone https://github.com/tianweiy/CenterPoint.git
 cd CenterPoint
 pip install -r requirements.txt
@@ -54,10 +53,10 @@ export PYTHONPATH="${PYTHONPATH}:PATH_TO_NUSCENES_DEVKIT/python-sdk"
 
 ```bash
 # set the cuda path(change the path to your own cuda location) 
-export PATH=/usr/local/cuda-10.0/bin:$PATH
-export CUDA_PATH=/usr/local/cuda-10.0
-export CUDA_HOME=/usr/local/cuda-10.0
-export LD_LIBRARY_PATH=/usr/local/cuda-10.0/lib64:$LD_LIBRARY_PATH
+export PATH=/usr/local/cuda-12.1/bin:$PATH
+export CUDA_PATH=/usr/local/cuda-12.1
+export CUDA_HOME=/usr/local/cuda-12.1
+export LD_LIBRARY_PATH=/usr/local/cuda-12.1/lib64:$LD_LIBRARY_PATH
 
 # Rotated NMS 
 cd ROOT_DIR/det3d/ops/iou3d_nms
