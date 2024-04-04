@@ -294,10 +294,15 @@ def train_detector(model, dataset, cfg, distributed=False, validate=False, logge
         model = model.cuda()
 
     logger.info(f"model structure: {model}")
+    # print model parameter count
+    num_parameters = sum([l.nelement() for l in model.parameters()])
+    logger.info(f"number of parameters: {num_parameters}")
+
 
     trainer = Trainer(
         model, batch_processor, optimizer, lr_scheduler, cfg.work_dir, cfg.log_level
     )
+
 
     if distributed:
         optimizer_config = DistOptimizerHook(**cfg.optimizer_config)

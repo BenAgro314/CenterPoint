@@ -34,14 +34,16 @@ class VoxelNet(SingleStageDetector):
             )
             input_features = voxels
         else:
+            # M = sum_{batch} num_voxels[batch]
+            # why is num_voxels dynamic? because we only keep voxels that have points
             data = dict(
-                features=data['voxels'],
-                num_voxels=data["num_points"],
-                coors=data["coordinates"],
+                features=data['voxels'], # (M , max_points, 5) <-- stores actual point information. Last dim is x, y, z, tanh(intensity), elongation
+                num_voxels=data["num_points"], # (M,)
+                coors=data["coordinates"], # (M, 4) # 4 is batch, z, y, x
                 batch_size=len(data['points']),
                 input_shape=data["shape"][0],
             )
-            input_features = self.reader(data["features"], data['num_voxels'])
+            input_features = self.reader(data["features"], data['num_voxels']) # VoxelFeatureExtractorV3 just does average pooling
 
         x, voxel_feature = self.backbone(
                 input_features, data["coors"], data["batch_size"], data["input_shape"]
