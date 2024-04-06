@@ -147,7 +147,7 @@ class RPN(nn.Module):
             if isinstance(m, nn.Conv2d):
                 xavier_init(m, distribution="uniform")
 
-    def forward(self, x):
+    def forward(self, x): # x.shape = (B, 256, 188, 188)
         ups = []
         for i in range(len(self.blocks)):
             x = self.blocks[i](x)

@@ -36,7 +36,7 @@ def main():
             iters.append(data["iter"])
             iters_per_epoch = data["iter"]
         else:
-            iters.append(data["iter"] + iters_per_epoch * epoch)
+            iters.append(data["iter"] + iters_per_epoch * (epoch - 1))
         loss.append(data["loss"])
         hm_loss.append(data["hm_loss"])
         loc_loss.append(data["loc_loss"])
